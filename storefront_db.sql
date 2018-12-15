@@ -1,11 +1,11 @@
 -- if db exists, drop it --
-DROP DATABASE IF EXISTS bamazon;
+DROP DATABASE IF EXISTS storefront_db;
 
 -- creates db --
-CREATE DATABASE bamazon;
+CREATE DATABASE storefront_db;
 
 -- for the code below to use the db --
-USE bamazon;
+USE storefront_db;
 
 
 CREATE TABLE products (
@@ -47,6 +47,6 @@ INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Book", "Literature", 2.00, 100);
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Chillies", "Produce", 1.00, 3);
+VALUES ("Ceramic", "Houseware", 3.50, 400);
 
 SELECT * from products

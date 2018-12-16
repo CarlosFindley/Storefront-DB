@@ -19,34 +19,34 @@ CREATE TABLE products (
 );
 
 -- Creates new rows containing data in all named columns --
-INSERT INTO products (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price_per_item, stock_quantity)
 VALUES ("Chillies", "Produce", 1.00, 50000);
 
-INSERT INTO products (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price_per_item, stock_quantity)
 VALUES ("Cacahuatl", "Produce", 10.00, 20000);
 
-INSERT INTO products (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price_per_item, stock_quantity)
 VALUES ("Elotl", "Produce", .50, 100000);
 
-INSERT INTO products (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price_per_item, stock_quantity)
 VALUES ("Octli", "Beverage", 5.00, 15000);
 
-INSERT INTO products (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price_per_item, stock_quantity)
 VALUES ("Obsidian", "Weapon", 7.25, 1000);
 
-INSERT INTO products (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price_per_item, stock_quantity)
 VALUES ("Jade", "Jewelry",  100.00, 50);
 
-INSERT INTO products (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price_per_item, stock_quantity)
 VALUES ("Feathers", "Jewelry", 1.00, 5000);
 
-INSERT INTO products (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price_per_item, stock_quantity)
 VALUES ("Canoe", "Navigation", 300.00, 10);
 
-INSERT INTO products (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price_per_item, stock_quantity)
 VALUES ("Book", "Literature", 2.00, 100);
 
-INSERT INTO products (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price_per_item, stock_quantity)
 VALUES ("Ceramic", "Houseware", 3.50, 400);
 
 SELECT * from products

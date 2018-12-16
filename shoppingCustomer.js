@@ -25,7 +25,7 @@ connection.connect(function(err) {
 // To pull our inventory
 function displayInventory() {
   // Query the database for all items being sold
-  connection.query("SELECT department_name, product_name, price, stock_quantity FROM products", function(err, results) {
+  connection.query("SELECT department_name, product_name, price_per_item, stock_quantity FROM products", function(err, results) {
     if (err) throw err;
     console.table(results);
     userPurchase()
@@ -42,38 +42,48 @@ function userPurchase() {
         {
           message: "What would you like to buy (select from product_name)?",
           type: "input",
-          name: "item"
+          name: "itemChoice"
         },
         {
           message: "How many would you like to buy (select from stock_quantity)?",
           type: "input",
-          name: "quantity"
+          name: "quantityChoice"
         }
       ]).then(function(answer) {
-        var itemChoice = parseInt(parseInt(answer.item) -1);
-        var itemTotal = parseInt(answer.quantity) * results[itemChoice].price_per_item;
+       // get the information of the chosen item
+       var chosenItem;
+       for (var i = 0; i < results.length; i++) {
+         if (results[i].product_name === answer.itemChoice) {
+           chosenItem = results[i];
+         }
+       }
 
-        // Update database
-        if (parseInt(answer.quantity) <= results[itemChoice].stock_quantity) {
-          connection.query("UPDATE products SET ? WHERE",
-          [
-            {
-              stock_quantity: (parseInt(results[itemChoice].stock_quantity) - answer.quantity)
-            },
-            {item_id: answer.item}
-        ],
-      function (err) {
-        if (err) throw err;
-        console.log("Thanks for your order!  Your Total is " + "$" + itemTotal.toFixed(2));
-        console.log("\n\n");
-        // End db connection
-        connection.end();
+        // determine if there is enough in the inventory
+        if (chosenItem.stock_quantity < parseInt(answer.quantityChoice)) {
+          // Enough in inventory, so update db, let the user know, and start over
+          connection.query(
+            "UPDATE products SET ? WHERE ?",
+            [
+              {
+                stock_quantity: answer.quantityChoice
+              },
+              {
+                item_id: chosenItem.item_id
+              }
+            ],
+            function(error) {
+              if (error) throw err;
+              console.log("Purchase placed successfully!");
+              // End db connection
+              connection.end();
+            }
+          );
+        } else {
+          // Not enough in inventory, so apologize and start over
+          console.log("Quantity has exeeded inventory, please lower the order quantity");
+          userPurchase();
+          }
+       
       });
-    } else {
-      console.log("Quantity has exeeded inventory, please lower the order quantity");
-
-      userPurchase();
-    }
-  });
-})
+  })
 };

@@ -25,7 +25,7 @@ connection.connect(function(err) {
 // To pull our inventory
 function displayInventory() {
   // Query the database for all items being sold
-  connection.query("SELECT department_name, product_name, price_per_item, stock_quantity FROM products", function(err, results) {
+  connection.query("SELECT item_id, product_name, department_name, price_per_item, stock_quantity FROM products", function(err, results) {
     if (err) throw err;
     console.table(results);
     userPurchase()
@@ -34,13 +34,14 @@ function displayInventory() {
 
 // To purchase
 function userPurchase() {
+  // query the database for all items being sold
   connection.query("SELECT * FROM products", function (err, results) {
     if (err) throw err;
     // Once we have the items, prompt the user for which they'd like to buy
     inquirer
       .prompt([
         {
-          message: "What would you like to buy (select from product_name)?",
+          message: "What would you like to buy (select from item_id)?",
           type: "input",
           name: "itemChoice"
         },
@@ -50,40 +51,54 @@ function userPurchase() {
           name: "quantityChoice"
         }
       ]).then(function(answer) {
-       // get the information of the chosen item
-       var chosenItem;
-       for (var i = 0; i < results.length; i++) {
-         if (results[i].product_name === answer.itemChoice) {
-           chosenItem = results[i];
-         }
-       }
 
-        // determine if there is enough in the inventory
-        if (chosenItem.stock_quantity < parseInt(answer.quantityChoice)) {
-          // Enough in inventory, so update db, let the user know, and start over
-          connection.query(
-            "UPDATE products SET ? WHERE ?",
-            [
-              {
-                stock_quantity: answer.quantityChoice
-              },
-              {
-                item_id: chosenItem.item_id
-              }
-            ],
-            function(error) {
-              if (error) throw err;
-              console.log("Purchase placed successfully!");
-              // End db connection
-              connection.end();
-            }
-          );
-        } else {
-          // Not enough in inventory, so apologize and start over
-          console.log("Quantity has exeeded inventory, please lower the order quantity");
-          userPurchase();
-          }
-       
+          // console.log(answer);
+          // console.log(results);
+
+        // Check if there are enough items in the inventory
+        var inventoryResult = connection.query("SELECT stock_quantity FROM products WHERE item_id =" + answer.itemChoice, function (err, resultsIntventory) {
+          // results = [ RowDataPacket { stock_quantity: 50000 } ]
+          // results[0] = RowDataPacket { stock_quantity: 50000 }
+          // results[0].RowDataPacket
+        
+            // console.log("results", results[0].stock_quantity);
+
+          // determine if there is enough in the inventory
+          if (resultsIntventory[0].stock_quantity < parseInt(answer.quantityChoice)) {
+            // Not enough in the inventory
+            console.log("Sorry, not enough in inventory, please lower the order quantity.")
+            userPurchase();
+          } else {
+            // Succesful purchase message
+            console.log("Purchase of " + answer.quantityChoice + " ___ was successful!  Your total is ___.");
+            // console.log("hi ", results);
+          }; 
       });
+    
   })
-};
+  });
+
+}
+
+// var chosenItem = answer.choice - 1;
+
+
+
+  // Connect to db to update the quantity
+  // connection.query(
+  //   "UPDATE products SET ? WHERE ?",
+  //     [
+  //       {
+  //         stock_quantity: (results[0].stock_quantity - parseInt(answer.quantityChoice)) 
+  //       },
+  //       {
+  //         item_id: answer.itemChoice
+  //       }
+  //     ],
+    
+  //     // If purchase is succesful, let the user know
+  //     function (err, response) {
+  //       if (err) throw err;
+  //       console.log("Purchase placed successfully!");
+  //     }   
+  //   );

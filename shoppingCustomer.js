@@ -28,15 +28,12 @@ function displayInventory() {
   connection.query("SELECT item_id, product_name, department_name, price_per_item, stock_quantity FROM products", function(err, results) {
     if (err) throw err;
     console.table(results);
-    userPurchase()
+    userPurchase();
   });
 }
 
 // To purchase
 function userPurchase() {
-  // query the database for all items being sold
-  connection.query("SELECT * FROM products", function (err, results) {
-    if (err) throw err;
     // Once we have the items, prompt the user for which they'd like to buy
     inquirer
       .prompt([
@@ -56,7 +53,7 @@ function userPurchase() {
           // console.log(results);
 
         // Check if there are enough items in the inventory
-        var inventoryResult = connection.query("SELECT stock_quantity FROM products WHERE item_id =" + answer.itemChoice, function (err, resultsIntventory) {
+        var inventoryResult = connection.query("SELECT * FROM products WHERE item_id =" + answer.itemChoice, function (err, resultsIntventory) {
           // results = [ RowDataPacket { stock_quantity: 50000 } ]
           // results[0] = RowDataPacket { stock_quantity: 50000 }
           // results[0].RowDataPacket
@@ -69,15 +66,14 @@ function userPurchase() {
             console.log("Sorry, not enough in inventory, please lower the order quantity.")
             userPurchase();
           } else {
+            var costTotal = answer.quantityChoice * resultsIntventory[0].price_per_item;
             // Succesful purchase message
-            console.log("Purchase of " + answer.quantityChoice + " ___ was successful!  Your total is ___.");
-            // console.log("hi ", results);
+            console.log("Purchase of " + answer.quantityChoice + " " + resultsIntventory[0].product_name + " was successful!  Your total is " + costTotal + ".");
+            // console.log("hi ", resultsIntventory);
           }; 
       });
     
-  })
   });
-
 }
 
 // var chosenItem = answer.choice - 1;

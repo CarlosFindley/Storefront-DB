@@ -75,26 +75,3 @@ function userPurchase() {
     
   });
 }
-
-// var chosenItem = answer.choice - 1;
-
-
-
-  // Connect to db to update the quantity
-  // connection.query(
-  //   "UPDATE products SET ? WHERE ?",
-  //     [
-  //       {
-  //         stock_quantity: (results[0].stock_quantity - parseInt(answer.quantityChoice)) 
-  //       },
-  //       {
-  //         item_id: answer.itemChoice
-  //       }
-  //     ],
-    
-  //     // If purchase is succesful, let the user know
-  //     function (err, response) {
-  //       if (err) throw err;
-  //       console.log("Purchase placed successfully!");
-  //     }   
-  //   );
